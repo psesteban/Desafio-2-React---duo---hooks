@@ -8,7 +8,7 @@ const Registro = () => {
 
   return (
     <div className="container">
-      <h1>Crea una cuenta</h1>
+      <h1 className="titulo">Crea una cuenta</h1>
       <SocialButton icono="fa-brands fa-facebook"/>
       <SocialButton icono="fa-brands fa-github" />
       <SocialButton icono="fa-brands fa-linkedin-in" />
