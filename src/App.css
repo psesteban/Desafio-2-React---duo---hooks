@@ -99,9 +99,8 @@ h1 {
   color: white;
 }
 
-
 .titulo {
-  font-size: 45px; 
+  font-size: 45px;
 }
 
 .mb-3 {
@@ -109,4 +108,7 @@ h1 {
   margin: 0px;
   padding: 0%;
   justify-content: center;
+}
+.opcion {
+  margin-top: 20px;
 }

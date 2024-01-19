@@ -4,120 +4,87 @@ import Form from "react-bootstrap/Form";
 import Alerta from "./Alert";
 
 const Formulario = () => {
-
-
-    const [user, setUser] = useState({
-      nombre: "",
-      email: "",
-      password1: "",
-      password2: "",
-    });
+  const [user, setUser] = useState({
+    Nombre: "",
+    Email: "",
+    Contraseña: "",
+    RepetirContraseña: "",
+  });
 
   const [mensajeDeAdvertencia, setMensajeDeAdvertencia] = useState("");
   const [estilo, setEstilo] = useState("");
 
   const validarDatos = () => {
-    if (user.nombre === "" || user.email === "" || user.password1 === "") {
+    if (Object.values(user).some((value) => value === "")) {
       setMensajeDeAdvertencia("Todos los campos son obligatorios");
       setEstilo("warning");
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
-  const compruebaEmail = () => {
+  const validarEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValid = emailRegex.test(user.email);
+    const isValid = emailRegex.test(user.Email);
 
     if (!isValid) {
       setMensajeDeAdvertencia("Introduce un mail válido");
+      setEstilo("danger");
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
-  const validaPassword = () => {
-    if (user.password1 === user.password2) {
-      return true;
-    } else {
+  const validarContraseñas = () => {
+    if (user.Contraseña !== user.RepetirContraseña) {
       setMensajeDeAdvertencia("Las contraseñas no son iguales");
       setEstilo("danger");
       return false;
     }
+    return true;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const datosValidos = validarDatos();
-    const emailValido = compruebaEmail();
-    const passValidos = validaPassword();
+    const datosValidos =
+      validarDatos() && validarEmail() && validarContraseñas();
 
-    if (datosValidos && emailValido && passValidos) {
+    if (datosValidos) {
       setEstilo("success");
       setMensajeDeAdvertencia("Registro realizado con éxito");
+    } else {
+      setEstilo("danger");
     }
   };
 
-
-const handleChange = (e) => setUser({ ...user, [e.target.name]: e.target.value})
+  const handleChange = (e) =>
+    setUser({ ...user, [e.target.name]: e.target.value });
 
   return (
     <>
       <Form className="formulario" onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="formBasicName">
-          <Form.Control
-            type="text"
-            placeholder="Nombre"
-            name="nombre"
-            onChange={handleChange}
-            value={user.nombre}
-          />
-        </Form.Group>
-
-        <Form.Group
-          className="mb-3"
-          controlId="formBasicEmail"
-          onSubmit={compruebaEmail}
-        >
-          <Form.Control
-            type="email"
-            placeholder="tuemail@ejemplo.com"
-            name="email"
-            onChange={handleChange}
-            value={user.email}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Control
-            type="password"
-            placeholder="Contraseña"
-            name="password1"
-            onChange={handleChange}
-            value={user.password1}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-          <Form.Control
-            type="password"
-            placeholder="Confirma tu contraseña"
-            name="password2"
-            onChange={handleChange}
-            value={user.password2}
-          />
-        </Form.Group>
+        {["Nombre", "Email", "Contraseña", "RepetirContraseña"].map((campo) => (
+          <Form.Group
+            key={campo}
+            className="mb-3"
+            controlId={`formBasic${campo}`}
+          >
+            <Form.Control
+              type={campo.includes("Contraseña") ? "password" : "text"}
+              placeholder={campo === "Email" ? "tuemail@ejemplo.com" : campo}
+              name={campo}
+              onChange={handleChange}
+              value={user[campo]}
+            />
+          </Form.Group>
+        ))}
 
         <Button variant="primary" type="submit">
           Registrarse
         </Button>
       </Form>
       <Alerta color={estilo} text={mensajeDeAdvertencia} />
-
-
     </>
   );
 };
