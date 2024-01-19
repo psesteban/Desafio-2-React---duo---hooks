@@ -4,51 +4,46 @@ import Form from "react-bootstrap/Form";
 import Alerta from "./Alert";
 
 const Formulario = () => {
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [password1, setPassword1] = useState("");
-  const [password2, setPassword2] = useState("");
 
-  const [error, setError] = useState(false);
-  const [validaEmail, setValidaEmail] = useState(true);
+
+    const [user, setUser] = useState({
+      nombre: "",
+      email: "",
+      password1: "",
+      password2: "",
+    });
+
   const [mensajeDeAdvertencia, setMensajeDeAdvertencia] = useState("");
   const [estilo, setEstilo] = useState("");
 
   const validarDatos = () => {
-    if (nombre === "" || email === "" || password1 === "") {
-      setError(true);
+    if (user.nombre === "" || user.email === "" || user.password1 === "") {
       setMensajeDeAdvertencia("Todos los campos son obligatorios");
-      setEstilo("warning")
+      setEstilo("warning");
       return false;
     } else {
-      setError(false);
       return true;
     }
   };
 
   const compruebaEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValid = emailRegex.test(email);
-    setValidaEmail(isValid);
+    const isValid = emailRegex.test(user.email);
 
     if (!isValid) {
-      setError(true);
       setMensajeDeAdvertencia("Introduce un mail válido");
       return false;
     } else {
-      setError(false);
       return true;
     }
   };
 
   const validaPassword = () => {
-    if (password1 === password2) {
-      setError(false);
+    if (user.password1 === user.password2) {
       return true;
     } else {
-      setError(true);
       setMensajeDeAdvertencia("Las contraseñas no son iguales");
-      setEstilo("danger")
+      setEstilo("danger");
       return false;
     }
   };
@@ -58,13 +53,16 @@ const Formulario = () => {
 
     const datosValidos = validarDatos();
     const emailValido = compruebaEmail();
-    const contrasenasValidas = validaPassword();
+    const passValidos = validaPassword();
 
-    if (datosValidos && emailValido && contrasenasValidas) {
-      setEstilo("success")
-      setMensajeDeAdvertencia("Registro realizado con éxito")
-    } 
+    if (datosValidos && emailValido && passValidos) {
+      setEstilo("success");
+      setMensajeDeAdvertencia("Registro realizado con éxito");
+    }
   };
+
+
+const handleChange = (e) => setUser({ ...user, [e.target.name]: e.target.value})
 
   return (
     <>
@@ -73,9 +71,9 @@ const Formulario = () => {
           <Form.Control
             type="text"
             placeholder="Nombre"
-            name="name"
-            onChange={(e) => setNombre(e.target.value)}
-            value={nombre}
+            name="nombre"
+            onChange={handleChange}
+            value={user.nombre}
           />
         </Form.Group>
 
@@ -88,34 +86,28 @@ const Formulario = () => {
             type="email"
             placeholder="tuemail@ejemplo.com"
             name="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={handleChange}
+            value={user.email}
           />
         </Form.Group>
 
-        <Form.Group
-          className="mb-3"
-          controlId="formBasicPassword"
-        >
+        <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Control
             type="password"
             placeholder="Contraseña"
-            name="password"
-            onChange={(e) => setPassword1(e.target.value)}
-            value={password1}
+            name="password1"
+            onChange={handleChange}
+            value={user.password1}
           />
         </Form.Group>
 
-        <Form.Group
-          className="mb-3"
-          controlId="formBasicConfirmPassword"
-        >
+        <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
           <Form.Control
             type="password"
             placeholder="Confirma tu contraseña"
-            name="confirmPassword"
-            onChange={(e) => setPassword2(e.target.value)}
-            value={password2}
+            name="password2"
+            onChange={handleChange}
+            value={user.password2}
           />
         </Form.Group>
 
@@ -123,7 +115,9 @@ const Formulario = () => {
           Registrarse
         </Button>
       </Form>
-      <Alerta color={error ? {estilo} : null} text={mensajeDeAdvertencia} />
+      <Alerta color={estilo} text={mensajeDeAdvertencia} />
+
+
     </>
   );
 };

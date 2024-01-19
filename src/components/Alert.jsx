@@ -2,6 +2,8 @@ import Alert from 'react-bootstrap/Alert';
 
 const Alerta = ({color, text}) => {
 
+console.log(color)
+console.log(text)
 
     return (
   <Alert key={color} variant={color}>
@@ -10,3 +12,5 @@ const Alerta = ({color, text}) => {
     );
 }
   export default Alerta;
+
+  
